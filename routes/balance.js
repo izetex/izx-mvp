@@ -1,5 +1,6 @@
 var express = require('express');
 
+var EthereumWallet = require('../lib/ethereum_wallet');
 var EthereumConnection = require('../lib/ethereum_connection');
 
 var router = express.Router();
@@ -12,7 +13,8 @@ router.use(function timeLog(req, res, next) {
 
 router.get('/', function(req, res, next) {
 
-    var euthereum = new EthereumConnection();
+    var wallet = new EthereumWallet();
+    var euthereum = new EthereumConnection(wallet);
 
     euthereum.web3.eth.getBalance( euthereum.address,
         function(error, result){
