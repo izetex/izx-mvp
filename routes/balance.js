@@ -1,11 +1,9 @@
 var express = require('express');
 
-var Web3 = require('web3');
-var HDWalletProvider = require("truffle-hdwallet-provider");
+var EthereumConnection = require('../lib/ethereum_connection');
 
 var router = express.Router();
 
-var mnemonic = 'satisfy test used phone glue air pyramid aerobic heavy nation moon syrup';
 
 router.use(function timeLog(req, res, next) {
     next();
@@ -14,17 +12,17 @@ router.use(function timeLog(req, res, next) {
 
 router.get('/', function(req, res, next) {
 
-    var provider = new HDWalletProvider(mnemonic, "http://node1.izx.io:8545");
-    var web3 = new Web3(provider);
+    var euthereum = new EthereumConnection();
 
-    web3.eth.getBalance( provider.address,
+    euthereum.web3.eth.getBalance( euthereum.address,
         function(error, result){
             res.json({
-                address: provider.address,
-                balance: web3.fromWei(result),
+                address: euthereum.address,
+                balance: euthereum.web3.fromWei(result),
                 error: error
 
             } )
+            euthereum.engine.stop();
         }
     );
 
