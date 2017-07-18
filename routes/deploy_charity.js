@@ -2,7 +2,7 @@ var express = require('express');
 
 var EthereumWallet = require('../lib/ethereum_wallet');
 var EthereumConnection = require('../lib/ethereum_connection');
-var IzxToken = require('../lib/contracts/izx_token');
+var IzxCharityNetwork = require('../lib/contracts/izx_charity_network');
 
 var router = express.Router();
 
@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 
     var wallet = new EthereumWallet();
     var euthereum = new EthereumConnection(wallet);
-    var token = new IzxToken(euthereum);
+    var token = new IzxCharityNetwork(euthereum);
 
     token.deploy(function(error, contract){
 
