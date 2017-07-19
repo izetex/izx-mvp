@@ -2,6 +2,7 @@ var express = require('express');
 
 var EthereumWallet = require('../lib/ethereum_wallet');
 var EthereumConnection = require('../lib/ethereum_connection');
+var IzxToken = require('../lib/contracts/izx_token');
 
 var router = express.Router();
 
@@ -11,16 +12,18 @@ router.use(function timeLog(req, res, next) {
 });
 
 
-router.get('/', function(req, res, next) {
+router.get('/:address', function(req, res, next) {
 
-    var wallet = new EthereumWallet();
-    var euthereum = new EthereumConnection(wallet);
+    var address = req.params.address;
 
-    euthereum.web3.eth.getBalance( euthereum.address,
+    var euthereum = new EthereumConnection();
+    var izx_token = new IzxToken(euthereum);
+
+    izx_token.contract.balanceOf.call( address,
         function(error, result){
             res.json({
-                address: euthereum.address,
-                balance: euthereum.web3.fromWei(result),
+                address: address,
+                izx: result,
                 error: error
 
             } )
