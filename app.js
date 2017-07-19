@@ -31,6 +31,15 @@ app.use('/send_eth', require('./routes/send_eth'))
 app.use('/new', require('./routes/new'))
 
 
+app.use(function(err, req, res, next) {
+    console.log(err);
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    return res.json({error: String(err)});
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

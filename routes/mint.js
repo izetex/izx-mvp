@@ -23,8 +23,9 @@ router.get('/:address', function(req, res, next) {
     var euthereum = new EthereumConnection(wallet);
     var izx_token = new IzxToken(euthereum);
 
-    izx_token.contract.mintToken.sendTransaction( address, amount, { from: wallet.address, gas: '4700000'},
+    izx_token.contract.mintToken.sendTransaction( address, amount, { from: wallet.address, gas: '100000'},
         function(error, result){
+            euthereum.engine.stop();
             console.log(error, result);
             if(error || !result) {
                 res.json({
@@ -38,7 +39,6 @@ router.get('/:address', function(req, res, next) {
                 } );
             }
 
-            euthereum.engine.stop();
         }
     );
 

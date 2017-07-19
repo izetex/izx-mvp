@@ -17,24 +17,46 @@ router.get('/:address', function(req, res, next) {
     var address = req.params.address;
 
     var euthereum = new EthereumConnection();
-    var izx_token = new IzxToken(euthereum);
 
-    izx_token.contract.balanceOf.call( address,
-        function(error, result){
-            if(error || !result) {
-                res.json({
-                    error: String(error)
-                } );
-            }else{
-                res.json({
-                    address: address,
-                    izx: result
-                } );
+    if(req.query.token){
+        var izx_token = new IzxToken(euthereum);
+
+        izx_token.contract.balanceOf.call( address,
+            function(error, result){
+                euthereum.engine.stop();
+                if(error || !result) {
+                    res.json({
+                        error: String(error)
+                    } );
+                }else{
+                    res.json({
+                        address: address,
+                        izx: result
+                    } );
+                }
+
             }
+        );
+    }else{
+        euthereum.web3.eth.getBalance(address,
+            function(error, result){
+                euthereum.engine.stop();
+                if(error || !result) {
+                    res.json({
+                        error: String(error)
+                    } );
+                }else{
+                    res.json({
+                        address: address,
+                        eth: euthereum.web3.fromWei(result)
+                    } );
+                }
 
-            euthereum.engine.stop();
-        }
-    );
+
+            }
+        )
+    }
+
 
 
 });

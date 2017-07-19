@@ -12,12 +12,11 @@ router.use(function timeLog(req, res, next) {
 });
 
 
-router.get('/:pkey/:address', function(req, res, next) {
+router.post('/:pkey/:address', function(req, res, next) {
 
     var pkey = req.params.pkey;
     var address = req.params.address;
-    var amount = req.query.amount;
-
+    var amount = req.body.amount;
 
     var wallet = new EthereumWallet({ pkey: pkey});
     var euthereum = new EthereumConnection(wallet);
@@ -25,8 +24,9 @@ router.get('/:pkey/:address', function(req, res, next) {
 
     console.log("Transfer "+amount+"IZX "+ wallet.address +" -> "+address);
 
-    izx_token.contract.transfer.sendTransaction( address, amount, { from: wallet.address, gas: '120000'},
+    izx_token.contract.transfer.sendTransaction( address, amount, { from: wallet.address, gas: '100000'},
         function(error, result){
+            euthereum.engine.stop();
             console.log(error, result);
             if(error || !result) {
                 res.json({
@@ -40,7 +40,7 @@ router.get('/:pkey/:address', function(req, res, next) {
                 } );
             }
 
-            euthereum.engine.stop();
+
         }
     );
 

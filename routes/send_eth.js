@@ -11,21 +11,21 @@ router.use(function timeLog(req, res, next) {
 });
 
 
-router.get('/:pkey/:address', function(req, res, next) {
+router.post('/:address', function(req, res, next) {
 
-    var pkey = req.params.pkey;
     var address = req.params.address;
-    var amount = req.query.amount;
+    var amount = req.body.amount;
 
-    var wallet = new EthereumWallet({ pkey: pkey});
+    var wallet = new EthereumWallet();
     var euthereum = new EthereumConnection(wallet);
 
     console.log("Transfer "+amount+"ETH "+ wallet.address +" -> "+address);
 
 
 
-    euthereum.web3.eth.sendTransaction( { from: wallet.address, to: address, value: euthereum.web3.toWei(amount), gas: '4700000'},
+    euthereum.web3.eth.sendTransaction( { from: wallet.address, to: address, value: euthereum.web3.toWei(amount), gas: '100000'},
         function(error, result){
+            euthereum.engine.stop();
             console.log(error, result);
             if(error || !result) {
                 res.json({
@@ -39,7 +39,6 @@ router.get('/:pkey/:address', function(req, res, next) {
                 } );
             }
 
-            euthereum.engine.stop();
         }
     );
 

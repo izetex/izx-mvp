@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
     charity_contract.deploy(token, wallet, required_amount, name, description, image_url, site_url,
 
         function(error, contract){
-
+        euthereum.engine.stop();
         if(error || contract==undefined){
             res.json({
                 error: String(error)
@@ -46,7 +46,7 @@ router.post('/', function(req, res, next) {
             } );
         }
 
-        euthereum.engine.stop();
+            setTimeout(function(){  }, 3000);
     });
 
 
