@@ -21,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/deploy_token', require('./routes/deploy_token'))
 app.use('/deploy_charity', require('./routes/deploy_charity'))
+app.use('/contract_address', require('./routes/contract_address'))
 
 app.use('/balance', require('./routes/balance'))
 

@@ -123,10 +123,13 @@ contract IzxToken is Owned, StandardToken{
 contract Charity {
 
     function last_donation() constant
-            returns(address donator,  uint amount, uint timestamp, bool transfered, bool returned);
+            returns(address donator,  uint amount, string donate_transaction_hash);
 
     function donation(uint donation_index) constant
-            returns(address donator,  uint amount, uint timestamp, bool transfered, bool returned);
+            returns(address donator,  uint amount,
+            string donate_transaction_hash,
+            string transfer_transaction_hash,
+            string return_transaction_hash);
 
     function remaining_amount() constant returns(uint256 remaining);
 
@@ -134,11 +137,11 @@ contract Charity {
 
     function transfered_amount() constant returns(uint256 transfered);
 
-    function donate( uint256 amount) returns(uint index, uint256  donated_amount);
+    function accept_donation( address donator, uint256 donated_amount, string transaction_hash )  returns(uint index);
 
-    function transfer_donations() returns(uint256 amount);
+    function transfer_donation(uint donation_index, string transaction_hash);
 
-    function return_donations() returns(uint256 amount);
+    function return_donation(uint donation_index, string transaction_hash);
 
 }
 
@@ -147,9 +150,9 @@ contract IzxCharity is Owned, Charity {
     struct Donation {
         address     donator;
         uint256     amount;
-        uint        timestamp;
-        bool        transfered;
-        bool        returned;
+        string      donate_transaction_hash ;
+        string      transfer_transaction_hash;
+        string      return_transaction_hash;
     }
 
     IzxToken    public  token;
@@ -175,26 +178,29 @@ contract IzxCharity is Owned, Charity {
     }
 
     function last_donation() constant
-            returns(address donator,  uint amount, uint timestamp, bool transfered, bool returned){
+            returns(address donator,  uint amount, string donate_transaction_hash){
         Donation storage d = donations[donations_num-1];
 
         donator = d.donator;
         amount = d.amount;
-        transfered = d.transfered;
-        returned = d.returned;
-        timestamp = d.timestamp;
+        donate_transaction_hash = d.donate_transaction_hash;
+
     }
 
     function donation(uint donation_index) constant
-            returns(address donator,  uint amount, uint timestamp, bool transfered, bool returned){
+            returns(address donator,  uint amount,
+            string donate_transaction_hash,
+            string transfer_transaction_hash,
+            string return_transaction_hash
+            ){
         require(donation_index<donations_num && donation_index>=0);
         Donation storage d = donations[donation_index];
 
         donator = d.donator;
         amount = d.amount;
-        transfered = d.transfered;
-        returned = d.returned;
-        timestamp = d.timestamp;
+        donate_transaction_hash = d.donate_transaction_hash;
+        transfer_transaction_hash = d.transfer_transaction_hash;
+        return_transaction_hash = d.return_transaction_hash;
     }
 
     function remaining_amount() constant returns(uint256 remaining){
@@ -213,59 +219,36 @@ contract IzxCharity is Owned, Charity {
     function transfered_amount() constant returns(uint256 transfered){
         transfered = 0;
         for(uint i=0;i<donations_num;i++){
-            if(donations[i].transfered){
+            if(bytes(donations[i].transfer_transaction_hash).length>0){
                 transfered += donations[i].amount;
             }
         }
         return transfered;
     }
 
-    function donate( uint256 amount) returns(uint index, uint256  donated_amount){
-
-        donated_amount = amount;
-
-        if(donated_amount>remaining_amount()){
-            donated_amount = remaining_amount();
-        }
+    function accept_donation( address donator, uint256 donated_amount, string transaction_hash ) owner_only
+                    returns(uint index){
 
         require(donated_amount>0);
 
-        var success = token.transferFrom(msg.sender, this, donated_amount);
-        require(success);
-
         index = donations_num;
+        donations[index] = Donation( donator, donated_amount, transaction_hash, "","");
 
-        donations[index] = Donation( msg.sender, donated_amount, block.timestamp,
-            false, false);
         donations_num += 1;
+
     }
 
-    function transfer_donations() owner_only returns(uint256 amount){
-        amount = 0;
-        for(uint i=0;i<donations_num;i++){
-            Donation storage d = donations[i];
-            if(!d.transfered && !d.returned){
-                d.transfered = true;
-                amount += d.amount;
-            }
-        }
-        token.transfer(wallet, amount);
-        return amount;
+    function transfer_donation(uint donation_index, string transaction_hash) owner_only {
+        require(donation_index<donations_num && donation_index>=0);
+        donations[donation_index].transfer_transaction_hash = transaction_hash;
     }
 
-    function return_donations() owner_only returns(uint256 amount){
-        amount = 0;
-        for(uint i=0;i<donations_num;i++){
-            Donation storage d = donations[i];
-            if(!d.transfered && !d.returned){
-                d.returned = true;
-                token.transfer(d.donator, d.amount);
-                amount += d.amount;
-            }
-        }
-        return amount;
+    function return_donation(uint donation_index, string transaction_hash) owner_only {
+        require(donation_index<donations_num && donation_index>=0);
+        donations[donation_index].return_transaction_hash = transaction_hash;
     }
 
 
 
 }
+
