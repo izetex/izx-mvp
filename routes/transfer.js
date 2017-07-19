@@ -18,11 +18,12 @@ router.get('/:pkey/:address', function(req, res, next) {
     var address = req.params.address;
     var amount = req.query.amount;
 
-    console.log("Mint "+amount+" -> "+address);
 
     var wallet = new EthereumWallet({ pkey: pkey});
     var euthereum = new EthereumConnection(wallet);
     var izx_token = new IzxToken(euthereum);
+
+    console.log("Transfer "+amount+" "+ wallet.address +" -> "+address);
 
     izx_token.contract.transfer.sendTransaction( address, amount, { from: wallet.address, gas: '4700000'},
         function(error, result){

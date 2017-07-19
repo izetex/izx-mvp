@@ -25,6 +25,9 @@ app.use('/balance', require('./routes/balance'))
 app.use('/mint', require('./routes/mint'))
 app.use('/transfer', require('./routes/transfer'))
 
+app.use('/new', require('./routes/new'))
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
