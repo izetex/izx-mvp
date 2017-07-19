@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
 
     var token = req.body.token;
     var wallet = req.body.wallet;
-    var required_amount = req.body.required_amount;
+    var required_amount = Number(req.body.required_amount);
     var name = req.body.name;
     var description = req.body.description;
     var image_url = req.body.image_url;
