@@ -5,9 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
 
 // view engine setup
@@ -22,8 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
 app.use('/balance', require('./routes/balance'))
+app.use('/mint', require('./routes/mint'))
 app.use('/deploy_token', require('./routes/deploy_token'))
 app.use('/deploy_charity', require('./routes/deploy_charity'))
 

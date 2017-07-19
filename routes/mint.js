@@ -15,12 +15,17 @@ router.use(function timeLog(req, res, next) {
 router.get('/:address', function(req, res, next) {
 
     var address = req.params.address;
+    var amount = req.query.amount;
 
-    var euthereum = new EthereumConnection();
+    console.log("Mint "+amount+" -> "+address);
+
+    var wallet = new EthereumWallet();
+    var euthereum = new EthereumConnection(wallet);
     var izx_token = new IzxToken(euthereum);
 
-    izx_token.contract.balanceOf.call( address,
+    izx_token.contract.mintToken.sendTransaction( address, amount, { from: wallet.address, gas: '4700000'},
         function(error, result){
+            console.log(error, result);
             if(error || !result) {
                 res.json({
                     error: String(error)
@@ -28,7 +33,8 @@ router.get('/:address', function(req, res, next) {
             }else{
                 res.json({
                     address: address,
-                    izx: result
+                    amount: amount,
+                    result: result
                 } );
             }
 
