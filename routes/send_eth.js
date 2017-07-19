@@ -2,7 +2,6 @@ var express = require('express');
 
 var EthereumWallet = require('../lib/ethereum_wallet');
 var EthereumConnection = require('../lib/ethereum_connection');
-var IzxToken = require('../lib/contracts/izx_token');
 
 var router = express.Router();
 
@@ -18,14 +17,14 @@ router.get('/:pkey/:address', function(req, res, next) {
     var address = req.params.address;
     var amount = req.query.amount;
 
-
     var wallet = new EthereumWallet({ pkey: pkey});
     var euthereum = new EthereumConnection(wallet);
-    var izx_token = new IzxToken(euthereum);
 
-    console.log("Transfer "+amount+"IZX "+ wallet.address +" -> "+address);
+    console.log("Transfer "+amount+"ETH "+ wallet.address +" -> "+address);
 
-    izx_token.contract.transfer.sendTransaction( address, amount, { from: wallet.address, gas: '120000'},
+
+
+    euthereum.web3.eth.sendTransaction( { from: wallet.address, to: address, value: euthereum.web3.toWei(amount), gas: '4700000'},
         function(error, result){
             console.log(error, result);
             if(error || !result) {

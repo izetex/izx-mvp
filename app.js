@@ -24,6 +24,7 @@ app.use('/balance', require('./routes/balance'))
 
 app.use('/mint', require('./routes/mint'))
 app.use('/transfer', require('./routes/transfer'))
+app.use('/send_eth', require('./routes/send_eth'))
 
 app.use('/new', require('./routes/new'))
 
