@@ -23,7 +23,7 @@ router.get('/:address', function(req, res, next) {
 
         izx_token.contract.balanceOf.call( address,
             function(error, result){
-                euthereum.engine.stop();
+
                 if(error || !result) {
                     res.json({
                         error: String(error)
@@ -34,13 +34,13 @@ router.get('/:address', function(req, res, next) {
                         izx: result
                     } );
                 }
-
+                euthereum.engine.stop();
             }
         );
     }else{
         euthereum.web3.eth.getBalance(address,
             function(error, result){
-                euthereum.engine.stop();
+
                 if(error || !result) {
                     res.json({
                         error: String(error)
@@ -51,8 +51,7 @@ router.get('/:address', function(req, res, next) {
                         eth: euthereum.web3.fromWei(result)
                     } );
                 }
-
-
+                euthereum.engine.stop();
             }
         )
     }

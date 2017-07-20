@@ -20,15 +20,18 @@ router.get('/:hash', function(req, res, next) {
 
     euthereum.web3.eth.getTransactionReceipt( hash,
             function(error, result){
-                euthereum.engine.stop();
-                if(error || !result) {
+
+                if(error) {
                     res.json({
                         error: String(error)
                     } );
-                }else{
-                    res.json(result);
-                }
 
+                }else if(result instanceof Object) {
+                    res.json(result);
+                }else{
+                    res.json({});
+                }
+                euthereum.engine.stop();
             }
     );
 

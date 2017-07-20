@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
     var token = new IzxToken(euthereum);
 
     token.deploy(function(error, contract){
-        euthereum.engine.stop();
+
         if(error || contract==undefined){
             res.json({
                 error: String(error)
@@ -29,7 +29,7 @@ router.get('/', function(req, res, next) {
                 hash: contract.transactionHash
             } );
         }
-
+        euthereum.engine.stop();
     });
 
 

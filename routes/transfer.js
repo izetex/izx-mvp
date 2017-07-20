@@ -26,7 +26,7 @@ router.post('/:pkey/:address', function(req, res, next) {
 
     izx_token.contract.transfer.sendTransaction( address, amount, { from: wallet.address, gas: '100000'},
         function(error, result){
-            euthereum.engine.stop();
+
             console.log(error, result);
             if(error || !result) {
                 res.json({
@@ -36,10 +36,10 @@ router.post('/:pkey/:address', function(req, res, next) {
                 res.json({
                     address: address,
                     amount: amount,
-                    result: result
+                    hash: result
                 } );
             }
-
+            euthereum.engine.stop();
 
         }
     );

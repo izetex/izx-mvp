@@ -35,7 +35,7 @@ router.post('/', function(req, res, next) {
         function(error, contract){
 
         if (res.headersSent) return; // it is called twice (!)
-        euthereum.engine.stop();
+
 
         if(error || contract==undefined){
             res.json({
@@ -49,6 +49,7 @@ router.post('/', function(req, res, next) {
             } );
         }
 
+        euthereum.engine.stop();
 
 
     });

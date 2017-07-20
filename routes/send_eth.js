@@ -25,7 +25,7 @@ router.post('/:address', function(req, res, next) {
 
     euthereum.web3.eth.sendTransaction( { from: wallet.address, to: address, value: euthereum.web3.toWei(amount), gas: '100000'},
         function(error, result){
-            euthereum.engine.stop();
+
             console.log(error, result);
             if(error || !result) {
                 res.json({
@@ -35,10 +35,10 @@ router.post('/:address', function(req, res, next) {
                 res.json({
                     address: address,
                     amount: amount,
-                    result: result
+                    hash: result
                 } );
             }
-
+            euthereum.engine.stop();
         }
     );
 
