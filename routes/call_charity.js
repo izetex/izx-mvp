@@ -30,13 +30,13 @@ router.post('/:method/:address', function(req, res, next) {
             } );
         }else{
             res.json({
-                return: result
+                hash: result
             } );
         }
         euthereum.engine.stop();
     }
 
-    const options = { from: wallet.address, gas: '100000'};
+    const options = { from: wallet.address, gas: '500000'};
 
     switch (contract_method) {
         case "accept_donation":
