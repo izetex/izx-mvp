@@ -52,6 +52,8 @@ router.post('/:method/:address', function(req, res, next) {
             contract.return_donation.sendTransaction( req.body.donation_index,
                 req.body.transaction_hash, options, callback);
             break;
+        default:
+            callback("Unknown contract_method:"+contract_method);
     }
 
 
@@ -89,6 +91,9 @@ router.get('/:method/:address', function(req, res, next) {
         case "donation":
             contract.donation.call(req.query.donation_index, callback);
             break;
+        case "donations_num":
+            contract.donations_num.call(callback);
+            break;
         case "remaining_amount":
             contract.remaining_amount.call(callback);
             break;
@@ -119,7 +124,8 @@ router.get('/:method/:address', function(req, res, next) {
         case "site_url":
             contract.site_url.call(callback);
             break;
-
+        default:
+            callback("Unknown contract_method:"+contract_method);
     }
 
 
