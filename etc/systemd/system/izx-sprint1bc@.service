@@ -1,0 +1,13 @@
+[Unit]
+Description=nodejs Resque daemon
+Requires=network.target
+
+[Service]
+User=%I
+Type=forking
+WorkingDirectory=/home/studnev/node/izx-sprint1bc
+ExecStart=/usr/local/bin/forever start bin/www
+ExecStop=/usr/local/bin/forever stop bin/www
+
+[Install]
+WantedBy=multi-user.target

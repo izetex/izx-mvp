@@ -1,0 +1,5 @@
+sudo vim /etc/systemd/system/izx-sprint1bc@.service
+
+sudo systemctl enable izx-sprint1bc@studnev.service
+sudo systemctl start izx-sprint1bc@studnev.service
+sudo systemctl status izx-sprint1bc@studnev.service
