@@ -1,3 +1,48 @@
+
+
+--- GO ----
+
+Follow https://golang.org/doc/install
+
+wget https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz
+
+
+sudo tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
+mkdir -p ~/go; echo "export GOPATH=$HOME/go" >> ~/.bashrc
+echo "export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin" >> ~/.bashrc
+
+-- GETH ---
+
+git clone https://github.com/ethereum/go-ethereum
+sudo apt-get install -y build-essential golang
+
+cd go-ethereum
+make geth
+ln -s /home/studnev/go-ethereum/build/bin/geth /home/studnev/bin/geth
+
+-- ROPSTEN --
+
+https://github.com/ethereum/ropsten
+
+geth --testnet removedb
+geth --testnet --fast --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
+
+sudo vim /etc/systemd/system/geth@.service
+
+
+sudo systemctl enable geth@studnev.service
+
+sudo systemctl start geth@studnev.service
+sudo systemctl status geth@studnev.service
+
+--- run console ---
+geth attach ipc:/home/studnev/geth.ipc
+
+
+
+
+--- NODE APP ---
+
 sudo vim /etc/systemd/system/izx-sprint1bc@.service
 
 sudo systemctl enable izx-sprint1bc@studnev.service
