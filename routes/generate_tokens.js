@@ -24,7 +24,7 @@ router.post('/:pkey/:address', function(req, res, next) {
 
     console.log("generate tokens "+amount+" DRIVE's by owner "+ wallet.address +" -> "+address);
 
-    controller.contract.generateTokens.sendTransaction( address, amount, { from: wallet.address, gas: '200000'},
+    controller.contract.generateTokens.sendTransaction( address, euthereum.web3.toWei(amount), { from: wallet.address, gas: '200000'},
         function(error, result){
 
             console.log(error, result);
