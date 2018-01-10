@@ -29,6 +29,7 @@ app.use('/mint', require('./routes/mint'))
 app.use('/transfer', require('./routes/transfer'))
 app.use('/send_eth', require('./routes/send_eth'))
 
+app.use('/generate_tokens', require('./routes/generate_tokens'))
 
 app.use('/call_charity', require('./routes/call_charity'))
 
